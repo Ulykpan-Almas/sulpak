@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/main_admin.html" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div layout:fragment="admin_page_content">
+    <style>
+        .sidebar-sticky {
+            position: relative;
+            top: 0;
+            height: calc(100vh - 48px);
+            padding-top: 1rem;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+    </style>
+    <div class="row">
+        <nav class="col-md-2 col-lg-2 d-none d-md-block bg-light sidebar">
+            <div class="container pt-5">
+                <h5 th:text="#{h5.adminpanel}"></h5>
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <a class="nav-link" th:href="@{'/admin_users'}" th:text="#{admin.users}"></a>
+                        </li>
+                        <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <a class="nav-link" th:href="@{'/admin_roles'}" th:text="#{admin.roles}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{'/admin'}" th:text="#{admin.brands}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" th:href="@{'/admin_countries'}" th:text="#{admin.countries}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{'/admin_items'}" th:text="#{admin.items}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{'/admin_categories'}" th:text="#{topic.categories}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{'/admin_orders'}" th:text="#{topic.orders}"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="col-10">
+            <div class="container pt-5 mb-5">
+                <div class="row d-flex justify-content-between">
+                    <h4 th:text="#{admin.countries}"></h4>
+                    <button type="button" style="background-color: red; font-weight: bold;" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" th:text="#{button.addnew}">
+                    </button>
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form th:action="@{'/addCountry'}" method="post">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel" th:text="#{h5.newcountry}"></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label th:text="#{label.name}"></label>
+                                            <input type="text" name="name" class="form-control" th:placeholder="#{label.name}" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label th:text="#{label.code}"></label>
+                                            <input type="text" name="code" class="form-control" th:placeholder="#{label.code}" required>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="font-weight: bold;" th:text="#{button.cancel}"></button>
+                                        <button class="btn btn-success" style="background-color: #2bc170;"  th:text="#{button.add}"></button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col" th:text="#{label.id}"></th>
+                    <th scope="col" th:text="#{label.name}"></th>
+                    <th scope="col" th:text="#{label.code}"></th>
+                    <th scope="col" th:text="#{label.operations}"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="country : ${countries}">
+                    <th scope="row" th:text="${country.id}"></th>
+                    <td th:text="${country.name}"></td>
+                    <td th:text="${country.code}"></td>
+                    <td class="d-flex">
+
+                        <button type="button" class="btn btn-primary" style="font-weight: bold;" data-toggle="modal" th:attr="data-target='#edit' + ${country.id}"><i class="fas fa-edit"></i>
+                        </button>
+
+                        <div class="modal fade" th:id="'edit' + ${country.id}" tabindex="-1" th:attr="aria-labelledby='edit' + ${country.id} + 'Label'" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form th:action="@{'/editCountry'}" method="post">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" th:id="'edit' + ${country.id} + 'Label'" th:text="#{h5.edit_country}"></h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label th:text="#{label.name}"></label>
+                                                <input type="hidden" name="country_id" th:value="${country.id}">
+                                                <input type="text" name="name" class="form-control" th:value="${country.name}" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label th:text="#{label.code}"></label>
+                                                <input type="text" name="code" class="form-control" th:value="${country.code}" required>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{button.cancel}"></button>
+                                            <button class="btn btn-primary" th:text="#{button.edit}"></button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form th:action="@{'/deleteCountry'}" method="post">
+                            <input type="hidden" name="country_id" th:value="${country.id}">
+                            <button class="btn btn-info btn-sm ml-3" style="background-color: red; font-weight: bold;" th:text="#{button.delete}"></button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</html>

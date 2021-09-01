@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/main.html">
+<div layout:fragment="site_content">
+    <div class="row mt-5">
+        <div class="col-sm-12 mb-5">
+            <form th:action="@{'/addCountry'}" method="post">
+                <div class="form-group">
+                    <label th:text="#{label.name}"></label>
+                    <input type="text" name="name" class="form-control" th:placeholder="#{label.name}" required>
+                </div>
+                <div class="form-group">
+                    <label th:text="#{label.code}"></label>
+                    <input type="text" name="code" class="form-control" th:placeholder="#{label.code}" required>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success" style="background-color:red;"  th:text="#{button.addItem}"></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/main.html">
+<div layout:fragment="site_content" >
+    <div class="container">
+        <div class="row mt-5 mb-5">
+            <div class="col">
+                <div class="card mt-2">
+                    <div class="card-header" style="background-color: red; color: white; font-weight: bold;" th:text="#{topic.categories}">
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" th:each="category : ${categories}"><img th:src="${category.logoURL}" style="min-height: 20px; max-width: 20px;"> <a th:href="@{'/searchcategory/' + ${category.id}}" style="font-weight: bold;" th:text="${category.name}"></a></li>
+                    </ul>
+                </div>
+                <div class="card mt-2">
+                    <div class="card-header" style="background-color: red; color: white; font-weight: bold;" th:text="#{topic.brands}">
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" th:each="brand_nav : ${brands}"><a th:href="@{'/searchbrand/' + ${brand_nav.id}}" style="font-weight: bold;" th:text="${brand_nav.name}"></a></li>
+                    </ul>
+                </div>
+                <div class="card mt-2">
+                    <div class="card-header" style="background-color: red; color: white; font-weight: bold;" th:text="#{topic.payments}">
+                    </div>
+                    <div class="card-body">
+                        <div class="row row-cols-3 m-0">
+                            <i class="fab fa-cc-visa fa-3x"></i>
+                            <i class="fab fa-cc-paypal fa-3x"></i>
+                            <i class="fab fa-cc-mastercard fa-3x"></i>
+                            <i class="fab fa-cc-apple-pay fa-3x"></i>
+                            <i class="fab fa-cc-amex fa-3x"></i>
+                            <i class="fab fa-cc-amazon-pay fa-3x"></i>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="form-group row d-flex justify-content-between ml-0 mr-0 mb-3" style="max-width: 802px;">
+                    <form class="form-inline" th:action="@{'/search'}" method="get">
+                        <div class="form-group col-4 mr-1 pl-0">
+                            <label for="search_name" th:text="#{label.search_name}"></label>
+                            <input type="text" class="form-control w-100" id="search_name" name="search_result" th:value="${search_item}">
+                        </div>
+                        <div class="form-group col-2 mr-1 pl-0">
+                            <label for="brand_search" th:text="#{label.brands}"></label>
+                            <select class="form-control w-100" id="brand_search" name="brand_search">
+                                <option></option>
+                                <option th:each="brand : ${brands}" th:text="${brand.name}" th:value="${brand.id}" th:selected="${brand_result} == ${brand.id}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group col-2 mr-1 pl-0">
+                            <label for="price_from" th:text="#{label.price_from}"></label>
+                            <input type="number" step="0.01" id="price_from" class="form-control w-100" name="price_from">
+                        </div>
+                        <div class="form-group col-2 mr-1 pl-0">
+                            <label for="price_to" th:text="#{label.price_to}"></label>
+                            <input type="number" step="0.01" id="price_to" class="form-control w-100" name="price_to">
+                        </div>
+                        <div class="form-group mt-auto"><button class="btn btn-danger w-100" th:text="#{button.search}" style="background-color: red; color: white; font-weight: bold;"></button></div>
+                    </form>
+                </div>
+                <div class="row d-flex justify-content-between ml-auto mr-0 mb-3" style="max-width: 802px;">
+                    <h4 th:text="#{h4.search_results}"></h4>
+                    <div>
+                        <label class="mr-2" for="buttons_sort" th:text="#{label.orderbyprice}"></label>
+                        <div class="btn-group" role="group" aria-label="Basic example" id="buttons_sort">
+                            <form th:action="@{'/sortasc'}">
+                                <input type="hidden" name="search_result" th:value="${search_item}">
+                                <input type="hidden" name="price_from" th:value="${price_from_searched}">
+                                <input type="hidden" name="price_to" th:value="${price_to_searched}">
+                                <input type="hidden" name="brand_search" th:value="${brand_result}">
+                                <button class="btn btn-secondary" th:text="#{search.ascending}"></button>
+                            </form>
+                            <form th:action="@{'/sortdesc'}" method="get">
+                                <input type="hidden" name="search_result" th:value="${search_item}">
+                                <input type="hidden" name="price_from" th:value="${price_from_searched}">
+                                <input type="hidden" name="price_to" th:value="${price_to_searched}">
+                                <input type="hidden" name="brand_search" th:value="${brand_result}">
+                                <button class="btn btn-secondary" th:text="#{search.descending}"></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <style>
+                    .description_cut p { /* Запрещаем перенос строк */
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        display: -webkit-box;
+                        -webkit-line-clamp: 3;
+                        -webkit-box-orient: vertical;
+
+                        /* Добавляем многоточие */
+                    }
+                    .name_cut a { /* Запрещаем перенос строк */
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        display: -webkit-box;
+                        -webkit-line-clamp: 1;
+                        -webkit-box-orient: vertical;
+
+                        /* Добавляем многоточие */
+                    }
+                </style>
+                <div class="row row-cols-1 row-cols-md-3">
+                    <div th:each="item : ${items}">
+                        <div class="col mb-4">
+                            <div class="card" style="min-height: 440px; max-height: 440px;">
+                                <img th:src="${item.smallPictureUrl}"
+                                     class="card-img-top" alt="..." style="min-height:139px; max-height: 139px; max-width: 246px;">
+                                <div class="card-body">
+                                    <div class="name_cut">
+                                        <h5 class="card-title"><a th:href="@{'/item/' + ${item.id}}" style="font-weight: bold;" th:text="${item.name}"></a></h5>
+                                    </div>
+                                    <h5 style="font-weight: bold;" th:text="'$' + ${item.price}"></h5>
+                                    <div class="description_cut">
+                                        <p class="card-text" th:text="${item.description}"></p>
+                                    </div>
+                                    <ul class="list-inline mt-3">
+                                        <li class="list-inline-item"><h6 style="font-weight: bold;" th:text="#{h5.brand}" class="card-text"></h6></li>
+                                        <li class="list-inline-item"><h6><a th:href="@{'/searchbrand/' + ${item.brand.id}}" class="card-link" style="font-weight: bold;" th:text="${item.brand.name} + ', ' + ${item.brand.country.code}"></a></h6></li>
+                                    </ul>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="rating_star">
+                                        <input type="radio"  th:value="5" th:id="${item.id} + '5'" th:checked="${item.getStars()==5}" disabled><label th:for="${item.id} + '5'" >☆</label>
+                                        <input type="radio"  th:value="4" th:id="${item.id} + '4'" th:checked="${item.getStars()==4}" disabled><label th:for="${item.id} + '4'">☆</label>
+                                        <input type="radio"  th:value="3" th:id="${item.id} + '3'" th:checked="${item.getStars()==3}" disabled><label th:for="${item.id} + '3'">☆</label>
+                                        <input type="radio"  th:value="2" th:id="${item.id} + '2'" th:checked="${item.getStars()==2}" disabled><label th:for="${item.id} + '2'">☆</label>
+                                        <input type="radio"  th:value="1" th:id="${item.id} + '1'" th:checked="${item.getStars()==1}" disabled><label th:for="${item.id} + '1'">☆</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

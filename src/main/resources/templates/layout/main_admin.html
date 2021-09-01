@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout">
+
+
+<head th:insert="blocks/head :: head">
+    <meta charset="UTF-8">
+    <title>ALL E-SHOP</title>
+</head>
+
+
+
+
+<body>
+<header th:insert="blocks/navbar_admin :: navbar_admin"></header>
+<div class="container" layout:fragment="admin_page_content"></div>
+</body>
+
+
+
+
+<!-- Footer -->
+<footer class="py-5 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2020</p>
+    </div>
+    <!-- /.container -->
+</footer>
+</html>

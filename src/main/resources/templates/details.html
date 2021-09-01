@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/main.html" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div layout:fragment="site_content">
+    <div class="row mt-5">
+        <div class="col">
+            <div class="card mt-2">
+                <div class="card-header" style="background-color: red; color: white; font-weight: bold;" th:text="#{topic.categories}">
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" th:each="category : ${categories}"><img th:src="${category.logoURL}" style="min-height: 20px; max-width: 20px;"> <a class="text-decoration-none" th:href="@{'/searchcategory/' + ${category.id}}" style="font-weight: bold;" th:text="${category.name}"></a></li>
+                </ul>
+            </div>
+            <div class="card mt-2">
+                <div class="card-header" style="background-color: red; color: white; font-weight: bold;" th:text="#{topic.brands}">
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" th:each="brand_nav : ${brands}"><a class="text-decoration-none" th:href="@{'/searchbrand/' + ${brand_nav.id}}" style="font-weight: bold;" th:text="${brand_nav.name}"></a></li>
+                </ul>
+            </div>
+            <div class="card mt-2">
+                <div class="card-header" style="background-color: red; color: white; font-weight: bold;" th:text="#{topic.payments}">
+                </div>
+                <div class="card-body">
+                    <div class="row row-cols-3 m-0">
+                        <i class="fab fa-cc-visa fa-3x"></i>
+                        <i class="fab fa-cc-paypal fa-3x"></i>
+                        <i class="fab fa-cc-mastercard fa-3x"></i>
+                        <i class="fab fa-cc-apple-pay fa-3x"></i>
+                        <i class="fab fa-cc-amex fa-3x"></i>
+                        <i class="fab fa-cc-amazon-pay fa-3x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-9 mb-5">
+            <style>
+                .description_cut p { /* Запрещаем перенос строк */
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 3;
+                    -webkit-box-orient: vertical;
+
+                    /* Добавляем многоточие */
+                }
+                .name_cut a { /* Запрещаем перенос строк */
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 1;
+                    -webkit-box-orient: vertical;
+
+                    /* Добавляем многоточие */
+                }
+            </style>
+            <style>
+                [id^="myImg"] {
+                    border-radius: 5px;
+                    cursor: pointer;
+                    transition: 0.3s;
+                }
+                [id^="myImg"]:hover {
+                    opacity: 0.7;
+                }
+
+                /* The Modal (background) */
+                .modall {
+                    display: none; /* Hidden by default */
+                    position: fixed; /* Stay in place */
+                    z-index: 1; /* Sit on top */
+                    padding-top: 100px; /* Location of the box */
+                    left: 0;
+                    top: 0;
+                    width: 100%; /* Full width */
+                    height: 100%; /* Full height */
+                    overflow: auto; /* Enable scroll if needed */
+                    background-color: rgb(0,0,0); /* Fallback color */
+                    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+                }
+
+                /* Modal Content (image) */
+                .modal-content {
+                    margin: auto;
+                    display: block;
+                    width: 80%;
+                    max-width: 700px;
+                }
+
+                /* Caption of Modal Image */
+                #caption {
+                    margin: auto;
+                    display: block;
+                    width: 80%;
+                    max-width: 700px;
+                    text-align: center;
+                    color: #ccc;
+                    padding: 10px 0;
+                    height: 150px;
+                }
+
+                /* Add Animation */
+                .modal-content, #caption {
+                    -webkit-animation-name: zoom;
+                    -webkit-animation-duration: 0.6s;
+                    animation-name: zoom;
+                    animation-duration: 0.6s;
+                }
+
+                @-webkit-keyframes zoom {
+                    from {-webkit-transform:scale(0)}
+                    to {-webkit-transform:scale(1)}
+                }
+
+                @keyframes zoom {
+                    from {transform:scale(0)}
+                    to {transform:scale(1)}
+                }
+
+                /* The Close Button */
+                .close {
+                    position: absolute;
+                    top: 15px;
+                    right: 35px;
+                    color: #f1f1f1;
+                    font-size: 40px;
+                    font-weight: bold;
+                    transition: 0.3s;
+                }
+
+                .close:hover,
+                .close:focus {
+                    color: #bbb;
+                    text-decoration: none;
+                    cursor: pointer;
+                }
+
+                /* 100% Image Width on Smaller Screens */
+                @media only screen and (max-width: 700px){
+                    .modal-content {
+                        width: 100%;
+                    }
+                }
+            </style>
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <img th:src="${item.smallPictureUrl}"
+                             class="card-img-top" alt="..." style="width: 100%;">
+                        <div class="card-body">
+                            <div class="name_cut">
+                                <h5 class="card-title"><a th:href="@{'/item/' + ${item.id}}" style="font-weight: bold;" th:text="${item.name}"></a></h5>
+                            </div>
+                            <h5 style="font-weight: bold;" th:text="'$' + ${item.price}"></h5>
+                            <div class="description_cut">
+                                <p class="card-text" th:text="${item.description}"></p>
+                            </div>
+                            <ul class="list-inline mt-3">
+                                <li class="list-inline-item"><h6 style="font-weight: bold;" th:text="#{h5.brand}" class="card-text"></h6></li>
+                                <li class="list-inline-item"><h6><a th:href="@{'/searchbrand/' + ${item.brand.id}}" class="card-link" style="font-weight: bold;" th:text="${item.brand.name} + ', ' + ${item.brand.country.code}"></a></h6></li>
+                            </ul>
+                            <div th:if="${picture != null}">
+                                <h5 th:text="#{h5.screenshots}" class="text-center"></h5>
+                                <div class="col-sm-6 offset-3 mb-5" style="width: 50%;">
+                                    <img th:src="@{'/itemphoto/'+ ${picture.url}}" style="width: 100%;" class="img-thumbnail">
+                                </div>
+
+                                <div th:each="pic : ${pictures}" class="d-inline-block">
+                                    <img th:src="@{'/itemphoto/'+ ${pic.url}}" style="min-height: 85px; max-height: 85px;" class="img-thumbnail mr-3" th:id="myImg + ${pic.id}" th:onclick="'getPropId(\'myImg' + ${pic.id} + '\');'">
+                                    <!-- The Modal -->
+
+                                </div>
+
+                                <div id="myModal" class="modall">
+                                    <span class="close">&times;</span>
+                                    <img class="modal-content" id="img01">
+                                    <div id="caption"></div>
+                                </div>
+
+                                <script>
+                                    function getPropId(myImgId){
+                                        var modal = document.getElementById("myModal");
+                                        var img = document.getElementById(myImgId);
+                                        var modalImg = document.getElementById("img01");
+                                        var captionText = document.getElementById("caption");
+                                        modal.style.display = "block";
+                                        modalImg.src = img.src;
+
+                                        var span = document.getElementsByClassName("close")[0];
+
+                                        // When the user clicks on <span> (x), close the modal
+                                        span.onclick = function() {
+                                            modal.style.display = "none";
+                                        }
+                                    }
+                                </script>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="rating_star">
+                                <input type="radio"  th:value="5" th:id="${item.id} + '5'" th:checked="${item.getStars()==5}" disabled><label th:for="${item.id} + '5'" >☆</label>
+                                <input type="radio"  th:value="4" th:id="${item.id} + '4'" th:checked="${item.getStars()==4}" disabled><label th:for="${item.id} + '4'">☆</label>
+                                <input type="radio"  th:value="3" th:id="${item.id} + '3'" th:checked="${item.getStars()==3}" disabled><label th:for="${item.id} + '3'">☆</label>
+                                <input type="radio"  th:value="2" th:id="${item.id} + '2'" th:checked="${item.getStars()==2}" disabled><label th:for="${item.id} + '2'">☆</label>
+                                <input type="radio"  th:value="1" th:id="${item.id} + '1'" th:checked="${item.getStars()==1}" disabled><label th:for="${item.id} + '1'">☆</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:unless="${item.amount} == 0" class="mt-3">
+                        <form th:action="@{'/add_to_basket'}" method="post" class="mt-2">
+                            <input type="hidden" name="item_id" th:value="${item.id}">
+                            <button class="btn btn-danger"><i class="fas fa-shopping-cart"></i> <span th:text="#{button.addBasket}"></span></button>
+                        </form>
+                    </div>
+                    <div th:unless="${item.amount} != 0" class="mt-5">
+                        <h5 class="text-danger" th:text="#{text.no_in_stock}"></h5>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div sec:authorize="isAuthenticated()">
+                        <form th:action="@{'/add_comment'}" method="post">
+                            <input type="hidden" name="item_id" th:value="${item.id}">
+                            <div class="form-group">
+                                <textarea type="text" style="width: 100%;" name="comment_text" class="form-control"></textarea>
+                            </div>
+                            <div class="text-right">
+                                <button class="btn btn-primary"><i class="fas fa-comments"></i> <span th:text="#{button.addComment}"></span></button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="alert alert-primary mb-5" role="alert" th:unless="${currentUser != null}" th:text="#{text.authorize_comment}">
+                    </div>
+
+                    <div class="card" th:each="comment : ${comments}">
+                        <div class="card-body ml-2 mr-2">
+                            <div class="row">
+                                <h5 th:text="${comment.author.fullName}"></h5>
+                                <small th:text="${#dates.format(comment.addedDate, 'dd.MM.yyyy HH:mm')}" class="ml-auto"></small>
+                            </div>
+                            <div class="row">
+                                <p th:text="${comment.comment}" class="mb-0 pt-2"></p>
+                                <div sec:authorize="isAuthenticated()" th:if="${comment.author.id} == ${currentUser.id}" class="ml-auto">
+                                    <div class="row" style="margin-right: 0px;">
+                                        <button type="button" class="btn btn-primary ml-auto mr-2" data-toggle="modal" th:attr="data-target='#edit' + ${comment.id}" style="width: 38px;"><i class="fas fa-edit"></i>
+                                        </button>
+
+                                        <button type="button" class="btn btn-primary ml-auto" data-toggle="modal" th:attr="data-target='#delete' + ${comment.id}" style="background-color: red; height: 38px; width: 38px;"><i class="fas fa-trash-alt"></i>
+                                        </button>
+
+                                        <div class="modal fade" th:id="'edit' + ${comment.id}" tabindex="-1" th:attr="aria-labelledby='edit' + ${comment.id} + 'Label'" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form th:action="@{'/editComment'}" method="post">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" th:id="'edit' + ${comment.id} + 'Label'" th:text="#{h5.edit_comment}"></h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <label th:text="#{label.comment}"></label>
+                                                                <input type="hidden" name="comment_id" th:value="${comment.id}">
+                                                                <input type="hidden" name="item_id" th:value="${item.id}">
+                                                                <textarea type="text" name="comment_text" class="form-control" th:text="${comment.comment}" required></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{button.cancel}"></button>
+                                                            <button class="btn btn-primary" th:text="#{button.edit}" ></button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal fade" th:id="'delete' + ${comment.id}" tabindex="-1" th:attr="aria-labelledby='delete' + ${comment.id} + 'Label'" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form th:action="@{'/deleteComment'}" method="post">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" th:id="'delete' + ${comment.id} + 'Label'" th:text="#{message.confirm}"></h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <input type="hidden" name="item_id" th:value="${item.id}">
+                                                                <input type="hidden" name="comment_id" th:value="${comment.id}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{button.cancel}"></button>
+                                                            <button class="btn btn-info btn-sm ml-3" style="background-color: red; font-weight: bold;" th:text="#{button.delete}"></button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div sec:authorize="isAuthenticated()" th:if="${comment.author.id} != ${currentUser.id} and ${is_editor} == true" class="ml-auto">
+                                    <div class="row" style="margin-right: 0px;">
+                                        <button type="button" class="btn btn-primary ml-auto" data-toggle="modal" th:attr="data-target='#delete' + ${comment.id}" style="background-color: red; height: 38px; width: 38px;"><i class="fas fa-trash-alt"></i>
+                                        </button>
+
+                                        <div class="modal fade" th:id="'delete' + ${comment.id}" tabindex="-1" th:attr="aria-labelledby='delete' + ${comment.id} + 'Label'" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form th:action="@{'/deleteComment'}" method="post">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" th:id="'delete' + ${comment.id} + 'Label'" th:text="#{message.confirm}"></h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <input type="hidden" name="item_id" th:value="${item.id}">
+                                                                <input type="hidden" name="comment_id" th:value="${comment.id}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{button.cancel}"></button>
+                                                            <button class="btn btn-info btn-sm ml-3" style="background-color: red; font-weight: bold;" th:text="#{button.delete}"></button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

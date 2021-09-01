@@ -1,0 +1,130 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/main.html">
+    <div layout:fragment = "site_content">
+        <div class="row mt-5">
+            <div class="col">
+                <div class="card mt-2">
+                    <div class="card-header" style="background-color: red; color: white; font-weight: bold;" th:text="#{topic.categories}">
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" th:each="category : ${categories}"><img th:src="${category.logoURL}" style="min-height: 20px; max-width: 20px;"> <a th:href="@{'/searchcategory/' + ${category.id}}" style="font-weight: bold;" th:text="${category.name}"></a></li>
+                        <!--                            <li class="list-group-item"><i class="fas fa-mobile  mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.phones}">-->
+                        <!--                                </a></li>-->
+                        <!--                            <li class="list-group-item"><i class="fas fa-laptop  mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.laptops}"></a></li>-->
+                        <!--&lt;!&ndash;                            <li class="list-group-item"><a href="#" style="font-weight: bold;" th:text="#{sidebar.watches}"><i&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                    class="fas fa-sign-out-alt"></i></a></li>&ndash;&gt;-->
+                        <!--                            <li class="list-group-item"><i class="fas fa-tv  mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.televisions}"></a></li>-->
+                        <!--                            <li class="list-group-item"><i class="fas fa-gamepad  mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.gameConsoles}"></a></li>-->
+                        <!--                            <li class="list-group-item"><i class="fas fa-luggage-cart  mr-2"></i><a href="#" style="font-weight: bold;" th:text="#{sidebar.others}"></a></li>-->
+                    </ul>
+                </div>
+                <div class="card mt-2">
+                    <div class="card-header" style="background-color: red; color: white; font-weight: bold;" th:text="#{topic.brands}">
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" th:each="brand_nav : ${brands}"><a th:href="@{'/searchbrand/' + ${brand_nav.id}}" style="font-weight: bold;" th:text="${brand_nav.name}"></a></li>
+                        <!--                            <li class="list-group-item"><a href="#" style="font-weight: bold;">Samsung</a></li>-->
+                        <!--                            <li class="list-group-item"><a href="#" style="font-weight: bold;">LG</a></li>-->
+                        <!--                            <li class="list-group-item"><a href="#" style="font-weight: bold;">BOSCH</a></li>-->
+                        <!--                            <li class="list-group-item"><a href="#" style="font-weight: bold;">ZEPTER</a></li>-->
+                        <!--                            <li class="list-group-item"><a href="#" style="font-weight: bold;">XIAOMI</a></li>-->
+                        <!--                            <li class="list-group-item"><a href="#" style="font-weight: bold;">NOKIA</a></li>-->
+                        <!--                            <li class="list-group-item"><a href="#" style="font-weight: bold;" th:text="#{list.other}"></a></li>-->
+                    </ul>
+                </div>
+                <div class="card mt-2">
+                    <div class="card-header" style="background-color: red; color: white; font-weight: bold;" th:text="#{topic.payments}">
+                    </div>
+                    <div class="card-body">
+                        <div class="row row-cols-3 m-0">
+                            <i class="fab fa-cc-visa fa-3x"></i>
+                            <i class="fab fa-cc-paypal fa-3x"></i>
+                            <i class="fab fa-cc-mastercard fa-3x"></i>
+                            <i class="fab fa-cc-apple-pay fa-3x"></i>
+                            <i class="fab fa-cc-amex fa-3x"></i>
+                            <i class="fab fa-cc-amazon-pay fa-3x"></i>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="row">
+                    <div class="col-6 offset-3">
+                        <img th:src="@{'/viewphoto/'+ ${currentUser.pictureURL}}" class="my-3" style="width: 100%;">
+                    </div>
+                </div>
+                <div class="row mb-5">
+                    <div class="col-6 offset-3">
+                        <form th:action="@{'/uploadavatar'}" method="post" enctype="multipart/form-data">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="customFile" name="user_ava">
+                                <label class="custom-file-label" for="customFile" th:text="#{label.chooseFile}"></label>
+                                <button class="btn btn-danger mt-2" th:text="#{button.uploadFile}"></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+                <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${param.success_fullname}">
+                    <strong th:text="#{alert.success_fullname}"></strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form th:action="@{'/editprofile'}" method="post" class="mt-5">
+                    <div class="form-group">
+                        <label th:text="#{label.email}"></label>
+                        <input type="email" class="form-control" name="email" th:value="${currentUser.email}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{label.fullname}"></label>
+                        <input type="text" required class="form-control" name="full_name" th:value="${currentUser.fullName}">
+                        <small class="form-text text-muted" th:text="#{small.change_fullname}"></small>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-success" style="background-color: red; border: none;" th:text="#{button.update_profile}"></button>
+                    </div>
+                </form>
+
+                <hr class="my-4">
+
+                <div class="alert alert-warning alert-dismissible fade show" role="alert" th:if="${param.error_oldpassword}">
+                    <strong th:text="#{alert.error_oldpassword}"></strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert" th:if="${param.error_newpassword}">
+                    <strong th:text="#{alert.error_newpassword}"></strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${param.success_password}">
+                    <strong th:text="#{alert.success_password}"></strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form th:action="@{'/editpassword'}" method="post" class="mb-5">
+                    <div class="form-group">
+                        <label th:text="#{label.old_password}"></label>
+                        <input type="password" required class="form-control" name="old_password">
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{label.new_password}"></label>
+                        <input type="password" required class="form-control" name="new_password">
+                    </div>
+                    <div class="form-group">
+                        <label th:text="#{label.re_new_password}"></label>
+                        <input type="password" required class="form-control" name="re_new_password">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-success" style="background-color: red; border: none;" th:text="#{button.update_password}"></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</html>

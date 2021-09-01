@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/main_admin.html" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div layout:fragment="admin_page_content">
+    <style>
+        .sidebar-sticky {
+            position: relative;
+            top: 0;
+            height: calc(100vh - 48px);
+            padding-top: 1rem;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+    </style>
+    <div class="row">
+        <nav class="col-md-2 col-lg-2 d-none d-md-block bg-light sidebar">
+            <div class="container pt-5">
+                <h5 th:text="#{h5.adminpanel}"></h5>
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <a class="nav-link" th:href="@{'/admin_users'}" th:text="#{admin.users}"></a>
+                        </li>
+                        <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <a class="nav-link" th:href="@{'/admin_roles'}" th:text="#{admin.roles}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{'/admin'}" th:text="#{admin.brands}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{'/admin_countries'}" th:text="#{admin.countries}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{'/admin_items'}" th:text="#{admin.items}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{'/admin_categories'}" th:text="#{topic.categories}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" th:href="@{'/admin_orders'}" th:text="#{topic.orders}"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="col-10">
+            <div class="container pt-5 mb-5">
+                <div class="row d-flex justify-content-between">
+                    <h4 th:text="#{topic.orders}"></h4>
+                    <br>
+                    <h5 th:text="#{h5.total} + ': '"></h5>
+                    <h5 th:text="'$' + ${total}"></h5>
+                </div>
+            </div>
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col" th:text="#{label.id}"></th>
+                    <th scope="col" th:text="#{label.amount}"></th>
+                    <th scope="col" th:text="#{label.added_date}"></th>
+                    <th scope="col" th:text="#{label.price}"></th>
+                    <th scope="col" th:text="#{label.item}"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="order : ${orders}">
+                    <th scope="row" th:text="${order.id}"></th>
+                    <td th:text="${order.amount }"></td>
+                    <td th:text="${order.buy_date}"></td>
+                    <td th:text="${order.total_price}"></td>
+                    <td th:text="${order.item.name}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</html>
